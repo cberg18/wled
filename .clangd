@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://json.schemastore.org/clangd.json
+CompileFlags:
+  CompilationDatabase: ".pio/build/esp32dev"
+  Add:
+    - "--include-directory=/home/cberg18/Documents/code/wled/wled00"
+    - "--include-directory=/home/cberg18/Documents/code/wled/wled00/src"
+    - "--include-directory=/home/cberg18/Documents/code/wled/lib"
+    - "--include-directory=/home/cberg18/Documents/code/wled/usermods"
+    - "--include-directory=/home/cberg18/.platformio/packages/framework-arduinoespressif32/cores/esp32"
