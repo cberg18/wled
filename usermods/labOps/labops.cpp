@@ -21,12 +21,14 @@ void handle_status(AsyncWebServerRequest *request) {
 
     String response;
     serializeJson(doc, response);
+    Serial.println(response);
     request->send(200, "application/json", response);
 }
 
 void handle_set_height(AsyncWebServerRequest *request) {
     if (request->hasArg("cm")) {
         double height = request->arg("cm").toDouble();
+        Serial.printf("Setting height %.2f cm\n", height);
         desk.set_height(height);
         request->send(200, "text/plain", "OK");
     } else {
@@ -37,6 +39,7 @@ void handle_set_height(AsyncWebServerRequest *request) {
 void handle_command(AsyncWebServerRequest *request) {
     if (request->hasArg("action")) {
         String action = request->arg("action");
+        Serial.println("Handling command: " + action);
         if (action == "nudgeup") {
             desk.nudge_up();
         } else if (action == "nudgedown") {
@@ -60,6 +63,7 @@ void handle_command(AsyncWebServerRequest *request) {
         } else if (action == "setm4") {
             desk.save_preset(4);
         } else {
+            Serial.println("Unknown action: " + action);
             request->send(400, "text/plain", "Unknown action: " + action);
             return;
         }
@@ -94,7 +98,7 @@ class labOpsUsermod : public Usermod {
     }
     void connected() override {
       // WLED uses a bundled version of AsyncJson that requires manual parsing
-      server.addHandler(new AsyncCallbackJsonWebHandler("/api/toggle", [this](AsyncWebServerRequest *request) {
+      server.addHandler(new AsyncCallbackJsonWebHandler("/api/switch/toggle", [this](AsyncWebServerRequest *request) {
         if (request->_tempObject == NULL) {
           request->send(400, "application/json", "{\"error\":\"No body\"}");
           Serial.println("No body");
@@ -134,13 +138,16 @@ class labOpsUsermod : public Usermod {
         }
       }));
       // Set up web server routes
-      server.on("/api/status", HTTP_GET, [](AsyncWebServerRequest *request){
+      server.on("/api/desk/status", HTTP_GET, [](AsyncWebServerRequest *request){
+        Serial.println("Handling desk status request");
         handle_status(request);
       });
-      server.on("/api/set_height", HTTP_POST, [](AsyncWebServerRequest *request){
+      server.on("/api/desk/set_height", HTTP_POST, [](AsyncWebServerRequest *request){
+        Serial.println("Handling set desk height request");
         handle_set_height(request);
       });
-      server.on("/api/command", HTTP_POST, [](AsyncWebServerRequest *request){
+      server.on("/api/desk/command", HTTP_POST, [](AsyncWebServerRequest *request){
+        Serial.println("Handling desk move command request");
         handle_command(request);
       });
     }

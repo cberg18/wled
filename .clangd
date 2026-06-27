@@ -7,3 +7,4 @@ CompileFlags:
     - "--include-directory=/home/cberg18/Documents/code/wled/lib"
     - "--include-directory=/home/cberg18/Documents/code/wled/usermods"
     - "--include-directory=/home/cberg18/.platformio/packages/framework-arduinoespressif32/cores/esp32"
+    - "--include-directory=/home/cberg18/.platformio/packages/framework-arduinoespressif32"

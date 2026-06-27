@@ -246,8 +246,14 @@ void DeskProtocol::set_height(double target_cm) {
     wake_if_idle();
 
     // Safety boundaries
-    if (target_cm < min_height_cm) target_cm = min_height_cm;
-    if (target_cm > max_height_cm) target_cm = max_height_cm;
+    if (target_cm < min_height_cm) {
+        Serial.printf("Target height %.2f cm is below min height %.2f cm\n", target_cm, min_height_cm);
+        target_cm = min_height_cm;
+    }
+    if (target_cm > max_height_cm) {
+        Serial.printf("Target height %.2f cm is above max height %.2f cm\n", target_cm, max_height_cm);
+        target_cm = max_height_cm;
+    }
 
     int target_mm = (int)(target_cm * 10.0);
 
